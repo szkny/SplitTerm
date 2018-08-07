@@ -68,7 +68,8 @@ fun! splitterm#open(...) abort
     " ターミナル情報の保持
     let s:term.jobid = b:terminal_job_id
     let s:term.console_winid = win_getid()
-    return l:split
+    let s:term.split = l:split
+    return s:term
 endf
 
 
@@ -143,6 +144,7 @@ fun! splitterm#close()
     " SplitTermを終了する関数
     if splitterm#exist()
         if win_gotoid(s:term.console_winid)
+            let s:term = {}
             quit
         endif
     endif
@@ -168,8 +170,28 @@ fun! splitterm#exist() abort
 endf
 
 
+fun! splitterm#exist_id(info) abort
+    " 指定したコンソールの存在チェック
+    "   引数のinfoにはsplitterm#getinfo()と同じ型の辞書を渡す
+    if type(a:info) != 4
+        " 辞書型以外は受け付けない
+        return
+    endif
+    let l:current_winid = win_getid()
+    if has_key(a:info, 'jobid')
+      \&& has_key(a:info, 'console_winid')
+      \&& win_gotoid(a:info.console_winid)
+        call win_gotoid(l:current_winid)
+        return 1
+    else
+        let s:term = {}
+        return 0
+    endif
+endf
+
+
 fun! splitterm#jobsend(...) abort
-    " 開いているコンソールに引数で与えたコマンドを送る
+    " 一番最近開いたコンソールに引数で与えたコマンドを送る
     if splitterm#exist()
         let l:command = ''
         if a:0 > 0
@@ -186,7 +208,26 @@ fun! splitterm#jobsend(...) abort
 endf
 
 
-fun! splitterm#info() abort
+fun! splitterm#jobsend_id(info, ...) abort
+    " 指定したコンソールに引数で与えたコマンドを送る
+    "   引数のinfoにはsplitterm#getinfo()と同じ型の辞書を渡す
+    if splitterm#exist_id(a:info)
+        let l:command = ''
+        if a:0 > 0
+            let l:command = a:1
+            for l:arg in a:000[1:]
+                let l:command .= ' ' . l:arg
+            endfor
+        endif
+        try
+            call jobsend(a:info.jobid, "\<C-u>".l:command."\<CR>")
+        catch
+        endtry
+    endif
+endf
+
+
+fun! splitterm#getinfo() abort
     if exists('s:term')
         return s:term
     else
