@@ -162,6 +162,7 @@ fun! splitterm#exist() abort
         call win_gotoid(l:current_winid)
         return 1
     else
+        let s:term = {}
         return 0
     endif
 endf
