@@ -75,7 +75,6 @@ endf
 
 fun! s:setnewbufname(name) abort
     " 新規バッファのバッファ名(例: '1:bash')を設定する関数
-    "      NewTermとSplitTermで利用している
     let l:num = 1
     let l:name = split(a:name,' ')[0]
     while bufexists(l:num.':'.l:name)
@@ -87,7 +86,6 @@ endf
 
 fun! s:splitheight() abort
     " 新規分割ウィンドウの高さを決める関数
-    "      SplitTermで利用している
     let l:min_winheight = 10
     let l:max_winheight = winheight(0)/2
     " count max line length
@@ -95,6 +93,47 @@ fun! s:splitheight() abort
     let l:height = l:height>l:min_winheight ? l:height : 0
     let l:height = l:height>l:max_winheight ? l:max_winheight : l:height
     return l:height
+endf
+
+
+fun! s:vsplitwidth() abort
+    " 新規分割ウィンドウの幅を決める関数
+    let l:min_winwidth = 60
+    let l:max_winwidth = winwidth(0)/2
+    " count max line length
+    let l:all_lines = getline('w0', 'w$')
+    let l:max_line_len = 0
+    for l:line in l:all_lines
+        if len(l:line) > l:max_line_len
+            let l:max_line_len = strwidth(l:line)
+        endif
+    endfor
+    let l:max_line_len += 1
+    " count line number or ale column width
+    let l:linenumwidth = 0
+    if &number
+        " add line number column width
+        let l:linenumwidth = 4
+        let l:digits = 0
+        let l:linenum = line('$')
+        while l:linenum
+            let l:digits += 1
+            let l:linenum = l:linenum/10
+        endwhile
+        if l:digits > 3
+            let l:linenumwidth += l:digits - 3
+        endif
+    endif
+    " add ale sign line column width
+    if exists('*airline#extensions#ale#get_error')
+        \&& (airline#extensions#ale#get_error()!=#'' || airline#extensions#ale#get_warning()!=#'')
+            \|| exists('*GitGutterGetHunkSummary') && GitGutterGetHunkSummary() != [0, 0, 0]
+        let l:linenumwidth += 2
+    endif
+    let l:width = winwidth(0)-l:max_line_len-l:linenumwidth
+    let l:width = l:width>l:min_winwidth ? l:width : 0
+    let l:width = l:width>l:max_winwidth ? l:max_winwidth : l:width
+    return l:width
 endf
 
 
