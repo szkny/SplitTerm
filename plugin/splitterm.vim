@@ -22,7 +22,6 @@ fun! splitterm#open(...) abort
     "      ウィンドウサイズとの兼ね合いで決まる
     "      :SplitTerm [Command] で任意のシェルコマンドを実行
     let s:term = {}
-    let s:term.console_winid = win_getid()
     let l:current_dir = expand('%:p:h')
     " 分割ウィンドウの生成
     let l:split = ''
@@ -66,9 +65,8 @@ fun! splitterm#open(...) abort
     setlocal nospell
     setlocal lazyredraw
     " ターミナル情報の保持
-    let s:term.script_winid = win_getid()
     let s:term.jobid = b:terminal_job_id
-    call win_gotoid(s:term.script_winid)
+    let s:term.console_winid = win_getid()
     silent exe 'normal G'
     return l:split
 endf
