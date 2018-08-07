@@ -184,3 +184,12 @@ fun! splitterm#jobsend(...) abort
         endtry
     endif
 endf
+
+
+fun! splitterm#info() abort
+    if exists('s:term')
+        return s:term
+    else
+        return {}
+    endif
+endf
