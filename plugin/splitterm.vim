@@ -1,5 +1,5 @@
 "=============================================================================
-" FILE: IpdbDebugger.vim
+" FILE: splitterm.vim
 " AUTHOR:  Sohei Suzuki <suzuki.s1008 at gmail.com>
 " License: MIT license
 "=============================================================================
