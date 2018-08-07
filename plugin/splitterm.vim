@@ -67,7 +67,6 @@ fun! splitterm#open(...) abort
     " ターミナル情報の保持
     let s:term.jobid = b:terminal_job_id
     let s:term.console_winid = win_getid()
-    silent exe 'normal G'
     return l:split
 endf
 
