@@ -59,7 +59,6 @@ fun! splitterm#open(...) abort
     setlocal nobuflisted
     setlocal nocursorline
     setlocal nocursorcolumn
-    setlocal winfixwidth
     setlocal noswapfile
     setlocal nomodifiable
     setlocal nolist
