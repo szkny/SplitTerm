@@ -13,6 +13,7 @@ endif
 
 
 command! -complete=file -nargs=* SplitTerm call splitterm#open(<f-args>)
+command! SplitTermClose call splitterm#close()
 
 
 fun! splitterm#open(...) abort
@@ -154,6 +155,7 @@ fun! splitterm#exist() abort
     " 分割ウィンドウの存在チェック
     if !exists('s:term')
         let s:term = {}
+        return 0
     endif
     let l:current_winid = win_getid()
     if has_key(s:term, 'jobid')
