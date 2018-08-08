@@ -38,13 +38,7 @@ fun! splitterm#open(...) abort
     silent exe l:cmd1
     silent exe 'lcd ' . l:current_dir
     " terminalコマンドの実行
-    let l:cmd2 = 'terminal'
-    if a:0 > 0
-        for l:i in a:000
-            let l:cmd2 .= ' '.l:i
-        endfor
-    endif
-    silent exe l:cmd2
+    silent exe 'terminal '.join(a:000)
     " バッファ名を変更
     if a:0 == 0
         silent call s:setnewbufname('bash')
@@ -231,15 +225,8 @@ endf
 fun! splitterm#jobsend(...) abort
     " 一番最近開いたコンソールに引数で与えたコマンドを送る
     if splitterm#exist()
-        let l:command = ''
-        if a:0 > 0
-            let l:command = a:1
-            for l:arg in a:000[1:]
-                let l:command .= ' ' . l:arg
-            endfor
-        endif
         try
-            call jobsend(s:term.jobid, "\<C-u>".l:command."\<CR>")
+            call jobsend(s:term.jobid, "\<C-u>".join(a:000)."\<CR>")
         catch
         endtry
     endif
@@ -250,15 +237,8 @@ fun! splitterm#jobsend_id(info, ...) abort
     " 指定したコンソールに引数で与えたコマンドを送る
     "   引数のinfoにはsplitterm#getinfo()と同じ型の辞書を渡す
     if splitterm#exist_id(a:info)
-        let l:command = ''
-        if a:0 > 0
-            let l:command = a:1
-            for l:arg in a:000[1:]
-                let l:command .= ' ' . l:arg
-            endfor
-        endif
         try
-            call jobsend(a:info.jobid, "\<C-u>".l:command."\<CR>")
+            call jobsend(a:info.jobid, "\<C-u>".join(a:000)."\<CR>")
         catch
         endtry
     endif
