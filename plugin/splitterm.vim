@@ -13,7 +13,7 @@ endif
 
 
 command! -complete=file -nargs=* SplitTerm call splitterm#open(<f-args>)
-command! -nargs=* SplitTermJobSend call splitterm#jobsend(<f-args>)
+command! -nargs=* SplitTermExec call splitterm#jobsend(<f-args>)
 command! SplitTermClose call splitterm#close()
 
 
