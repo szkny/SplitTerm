@@ -130,52 +130,58 @@ fun! s:vsplitwidth() abort
 endf
 
 
-fun! splitterm#close()
+fun! splitterm#close(...)
     " SplitTermを終了する関数
-    if splitterm#exist()
-        if win_gotoid(s:term.console_winid)
-            let s:term = {}
-            quit
+    if a:0 == 0
+        if splitterm#exist()
+            if win_gotoid(s:term.console_winid)
+                let s:term = {}
+                quit
+            endif
+        endif
+    else
+        if splitterm#exist(a:1)
+            if win_gotoid(a:1.console_winid)
+                quit
+            endif
         endif
     endif
 endf
 
 
-fun! splitterm#exist() abort
+fun! splitterm#exist(...) abort
     " 分割ウィンドウの存在チェック
-    if !exists('s:term')
-        let s:term = {}
-        return 0
-    endif
-    let l:current_winid = win_getid()
-    if has_key(s:term, 'jobid')
-      \&& has_key(s:term, 'console_winid')
-        \&& win_gotoid(s:term.console_winid)
-        call win_gotoid(l:current_winid)
-        return 1
+    " or 指定したコンソールの存在チェック
+    "   引数にはsplitterm#getinfo()と同じ型の辞書を渡す
+    if a:0 == 0
+        if !exists('s:term')
+            let s:term = {}
+            return 0
+        endif
+        let l:current_winid = win_getid()
+        if has_key(s:term, 'jobid')
+          \&& has_key(s:term, 'console_winid')
+            \&& win_gotoid(s:term.console_winid)
+            call win_gotoid(l:current_winid)
+            return 1
+        else
+            let s:term = {}
+            return 0
+        endif
     else
-        let s:term = {}
-        return 0
-    endif
-endf
-
-
-fun! splitterm#exist_id(info) abort
-    " 指定したコンソールの存在チェック
-    "   引数のinfoにはsplitterm#getinfo()と同じ型の辞書を渡す
-    if type(a:info) != 4
-        " 辞書型以外は受け付けない
-        return
-    endif
-    let l:current_winid = win_getid()
-    if has_key(a:info, 'jobid')
-      \&& has_key(a:info, 'console_winid')
-      \&& win_gotoid(a:info.console_winid)
-        call win_gotoid(l:current_winid)
-        return 1
-    else
-        let s:term = {}
-        return 0
+        if type(a:1) != 4
+            " 辞書型以外は受け付けない
+            return
+        endif
+        let l:current_winid = win_getid()
+        if has_key(a:1, 'jobid')
+          \&& has_key(a:1, 'console_winid')
+          \&& win_gotoid(a:1.console_winid)
+            call win_gotoid(l:current_winid)
+            return 1
+        else
+            return 0
+        endif
     endif
 endf
 
@@ -194,7 +200,7 @@ endf
 fun! splitterm#jobsend_id(info, ...) abort
     " 指定したコンソールに引数で与えたコマンドを送る
     "   引数のinfoにはsplitterm#getinfo()と同じ型の辞書を渡す
-    if splitterm#exist_id(a:info)
+    if splitterm#exist(a:info)
         try
             call jobsend(a:info.jobid, "\<C-u>".join(a:000)."\<CR>")
         catch
