@@ -6,14 +6,21 @@ SplitTerm is a plugin to easily use for neovim terminal mode.
 
 ## Install
 
+if you use [vim-plug](https://github.com/junegunn/vim-plug), add to your `init.vim`
+
 ```vim
 Plug 'szkny/SplitTerm'
 ```
 
-## Command list
+then, open nvim
+```vim
+:PlugInstall
+```
+
+## Commands
 
 | Usage | explain |
-|:---:|:---:|
+|:---|:---|
 |  :SplitTerm **COMMANDS**  |  Begin terminal & execute following commands (ex. **python**, default=bash)  |
 |  :SplitTermJobSend **COMMANDS** |  Send job to Terminal (ex. **echo**)  |
 |  :SplitTermClose  |  End Terminal  |
