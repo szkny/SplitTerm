@@ -29,7 +29,7 @@ nnoremap  t  :SplitTerm<CR>i
 
 | 使い方 | 説明 |
 |:---|:---|
-| :SplitTerm *COMMAND*        | 分割コンソールを開き、*COMMAND*を実行 (*COMMAND*のdefault: bash)  |
+| :SplitTerm *COMMAND*        | 分割コンソールを開き、*COMMAND*を実行 (default: bash)  |
 | :SplitTermJobSend *COMMAND* | 最後に開いたコンソールで*COMMAND*を実行 |
 | :SplitTermClose             | 最後に開いたコンソールを閉じる |
 
