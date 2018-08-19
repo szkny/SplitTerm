@@ -1,14 +1,12 @@
 # SplitTerm
 
-[ENGLISH](https://github.com/szkny/SplitTerm/README_en.md)  
-
 ## 概要
 
 neovimのターミナルモードのラッパープラグインです  
 
 ## インストール
 
-[vim-plug](https://github.com/junegunn/vim-plug)を使っているなら`init.vim`に以下を追記  
+[vim-plug](https://github.com/junegunn/vim-plug)の場合、`init.vim`に以下を追記  
 
 ```vim
 Plug 'szkny/SplitTerm'
