@@ -51,9 +51,6 @@ nnoremap  t  :SplitTerm<CR>i
 ```vim
 fun! s:python_run() abort
     " Pythonコンソールウィンドウを作り、編集中のPythonスクリプトを実行する関数
-    " szkny/SplitTerm プラグインを利用している
-    "      以下のように使用する
-    "      :Python
     if &filetype ==# 'python'
         if s:python_exist()
             "" コンソールウィンドウが有ればスクリプトを実行
