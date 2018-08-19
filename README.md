@@ -29,7 +29,7 @@ nnoremap  t  :SplitTerm<CR>i
 
 | 使い方 | 説明 |
 |:---|:---|
-| :SplitTerm *COMMAND*        | 分割コンソールを開き、*COMMAND*を実行 (例. **python**, default=bash)  |
+| :SplitTerm *COMMAND*        | 分割コンソールを開き、*COMMAND*を実行 (*COMMAND*のdefault: bash)  |
 | :SplitTermJobSend *COMMAND* | 最後に開いたコンソールで*COMMAND*を実行 |
 | :SplitTermClose             | 最後に開いたコンソールを閉じる |
 
@@ -48,7 +48,7 @@ nnoremap  t  :SplitTerm<CR>i
 
 #### <u>応用例</u>
 
-```vimscript
+```vim
 fun! s:python_run() abort
     " Pythonコンソールウィンドウを作り、編集中のPythonスクリプトを実行する関数
     " szkny/SplitTerm プラグインを利用している
