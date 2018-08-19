@@ -1,40 +1,101 @@
 # SplitTerm
 
-## About
+[ENGLISH](https://github.com/szkny/SplitTerm/README_en.md)  
 
-SplitTerm is a plugin to easily use for neovim terminal mode.  
+## 概要
 
-## Install
+neovimのターミナルモードのラッパープラグインです  
 
-if you use [vim-plug](https://github.com/junegunn/vim-plug), add to your `init.vim`
+## インストール
+
+[vim-plug](https://github.com/junegunn/vim-plug)を使っているなら`init.vim`に以下を追記  
 
 ```vim
 Plug 'szkny/SplitTerm'
 ```
 
-then, open nvim
+neovimを開いて下記コマンドを実行  
 ```vim
 :PlugInstall
 ```
 
-## Commands
+## キーマッピング (おすすめ)
 
-| Usage | explain |
-|:---|:---|
-|  :SplitTerm **COMMANDS**  |  Begin terminal & execute following commands (ex. **python**, default=bash)  |
-|  :SplitTermJobSend **COMMANDS** |  Send job to Terminal (ex. **echo**)  |
-|  :SplitTermClose  |  End Terminal  |
-
-## Mapping (recommended)
-
-add to your `init.vim`
+`t`で分割コンソールを起動するようにマッピング  
 
 ```vimscript
 nnoremap  t  :SplitTerm<CR>i
 ```
 
+## コマンド
+
+| 使い方 | 説明 |
+|:---|:---|
+| :SplitTerm *COMMAND*        | 分割コンソールを開き、*COMMAND*を実行 (例. **python**, default=bash)  |
+| :SplitTermJobSend *COMMAND* | 最後に開いたコンソールで*COMMAND*を実行 |
+| :SplitTermClose             | 最後に開いたコンソールを閉じる |
+
+## 関数
+
+`[]`の引数はオプショナル
+
+| 名前 | 説明 |
+|:---|:---|
+| splitterm#open(['*COMMAND*'])                      | 分割コンソールを開く (*COMMAND*が与えられれば実行) |
+| splitterm#close([*term_info*])                     | 最後に開いたコンソールを閉じる (*term_info*で指定したコンソールを閉じる) |
+| splitterm#exist([*term_info*])                     | 最後に開いたコンソールの存在確認 (*term_info*で指定したコンソールを確認) |
+| splitterm#jobsend('*COMMAND*')                     | 最後に開いたコンソールで*COMMAND*を実行 |
+| splitterm#jobsend_id(*term_info*, '*COMMAND*')     | *term_info*で指定したコンソールで*COMMAND*を実行 |
+| splitterm#getinfo()                                | 最後に開いたコンソールの*terminal_info*を取得 |
+
+#### <u>応用例</u>
+
+```vimscript
+fun! s:python_run() abort
+    " Pythonコンソールウィンドウを作り、編集中のPythonスクリプトを実行する関数
+    " szkny/SplitTerm プラグインを利用している
+    "      以下のように使用する
+    "      :Python
+    if &filetype ==# 'python'
+        if s:python_exist()
+            "" コンソールウィンドウが有ればスクリプトを実行
+            let l:script_name = expand('%:p')
+            let l:script_dir = expand('%:p:h')
+            if has_key(s:ipython, 'script_name')
+                \&& s:ipython.script_name !=# l:script_name
+                call splitterm#jobsend_id(s:ipython.info, '%reset')
+                call splitterm#jobsend_id(s:ipython.info, 'y')
+            endif
+            if has_key(s:ipython, 'script_dir')
+                \ && s:ipython.script_dir !=# l:script_dir
+                call splitterm#jobsend_id(s:ipython.info, '%cd '.l:script_dir)
+            endif
+            let s:ipython.script_name = l:script_name
+            let s:ipython.script_dir = l:script_dir
+            call splitterm#jobsend_id(s:ipython.info, '%run '.s:ipython.script_name)
+        else
+            "" コンソールウィンドウが無ければコンソール用のウィンドウを作る
+            let l:command = 'ipython'
+            let l:filename = ' ' . expand('%')
+            if findfile('Pipfile', expand('%:p')) !=# ''
+                \ && findfile('Pipfile.lock', expand('%:p')) !=# ''
+                let l:command = 'pipenv run ipython'
+            endif
+            let s:ipython = {}
+            let s:ipython.script_name = expand('%:p')
+            let s:ipython.script_dir = expand('%:p:h')
+            let l:script_winid = win_getid()
+            call splitterm#open(l:command, '--no-confirm-exit --colors=Linux')
+            let s:ipython.info = splitterm#getinfo()
+            silent exe 'normal G'
+            call win_gotoid(l:script_winid)
+        endif
+    endif
+endf
+command! Python call s:python_run()
+```
+
 ## Demo
 
 ![](https://github.com/szkny/SplitTerm/wiki/images/demo1.gif)
-![](https://github.com/szkny/SplitTerm/wiki/images/demo2_python_rand.gif)
-![](https://github.com/szkny/SplitTerm/wiki/images/demo3_python_3dplot.gif)
+![](https://github.com/szkny/SplitTerm/wiki/images/demo2.gif)
