@@ -103,7 +103,9 @@ fun! s:python_exist() abort
 endf
 ```
 
-## Demo
+## デモ
 
-![](https://github.com/szkny/SplitTerm/wiki/images/demo1.gif)
-![](https://github.com/szkny/SplitTerm/wiki/images/demo2.gif)
+![](https://github.com/szkny/SplitTerm/wiki/images/demo1.gif)  
+
+上記の応用例(Pythonコマンド)  
+![](https://github.com/szkny/SplitTerm/wiki/images/demo2.gif)  
