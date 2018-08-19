@@ -88,6 +88,19 @@ fun! s:python_run() abort
     endif
 endf
 command! Python call s:python_run()
+
+
+fun! s:python_exist() abort
+    if exists('s:ipython')
+        \&& has_key(s:ipython, 'script_name')
+        \&& has_key(s:ipython, 'script_dir')
+        \&& has_key(s:ipython, 'info')
+        if splitterm#exist(s:ipython.info)
+            return 1
+        endif
+    endif
+    return 0
+endf
 ```
 
 ## Demo
