@@ -27,24 +27,24 @@ nnoremap  t  :SplitTerm<CR>i
 
 ## コマンド
 
-| 使い方 | 説明 |
-|:---|:---|
-| :SplitTerm *COMMAND*        | 分割コンソールを開き、*COMMAND*を実行 (default: bash)  |
-| :SplitTermJobSend *COMMAND* | 最後に開いたコンソールで*COMMAND*を実行 |
-| :SplitTermClose             | 最後に開いたコンソールを閉じる |
+| 使い方                      | 説明                                                  |
+|:----------------------------|:------------------------------------------------------|
+| :SplitTerm *COMMAND*        | 分割コンソールを開き、*COMMAND*を実行 (default: bash) |
+| :SplitTermJobSend *COMMAND* | 最後に開いたコンソールで*COMMAND*を実行               |
+| :SplitTermClose             | 最後に開いたコンソールを閉じる                        |
 
 ## 関数
 
 `[]`の引数はオプショナル
 
-| 名前 | 説明 |
-|:---|:---|
-| splitterm#open(['*COMMAND*'])                      | 分割コンソールを開く (*COMMAND*が与えられれば実行) |
-| splitterm#close([*term_info*])                     | 最後に開いたコンソールを閉じる (*term_info*で指定したコンソールを閉じる) |
-| splitterm#exist([*term_info*])                     | 最後に開いたコンソールの存在確認 (*term_info*で指定したコンソールを確認) |
-| splitterm#jobsend('*COMMAND*')                     | 最後に開いたコンソールで*COMMAND*を実行 |
-| splitterm#jobsend_id(*term_info*, '*COMMAND*')     | *term_info*で指定したコンソールで*COMMAND*を実行 |
-| splitterm#getinfo()                                | 最後に開いたコンソールの*terminal_info*を取得 |
+| 名前                                           | 説明                                                                     |
+|:-----------------------------------------------|:-------------------------------------------------------------------------|
+| splitterm#open(['*COMMAND*'])                  | 分割コンソールを開く (*COMMAND*が与えられれば実行)                       |
+| splitterm#close([*term_info*])                 | 最後に開いたコンソールを閉じる (*term_info*で指定したコンソールを閉じる) |
+| splitterm#exist([*term_info*])                 | 最後に開いたコンソールの存在確認 (*term_info*で指定したコンソールを確認) |
+| splitterm#jobsend('*COMMAND*')                 | 最後に開いたコンソールで*COMMAND*を実行                                  |
+| splitterm#jobsend_id(*term_info*, '*COMMAND*') | *term_info*で指定したコンソールで*COMMAND*を実行                         |
+| splitterm#getinfo()                            | 最後に開いたコンソールの*terminal_info*を取得                            |
 
 #### <u>応用例</u>
 

@@ -28,22 +28,22 @@ nnoremap  t  :SplitTerm<CR>i
 
 ## Commands
 
-| Usage | explain |
-|:---|:---|
-| :SplitTerm *COMMANDS*        | Start terminal & execute following commands (ex. **python**, default=bash)  |
-| :SplitTermJobSend *COMMANDS* | Send job to Terminal |
-| :SplitTermClose              | Close latest split terminal window |
+| Usage                        | explain                                                                    |
+|:-----------------------------|:---------------------------------------------------------------------------|
+| :SplitTerm *COMMANDS*        | Start terminal & execute following commands (ex. **python**, default=bash) |
+| :SplitTermJobSend *COMMANDS* | Send job to Terminal                                                       |
+| :SplitTermClose              | Close latest split terminal window                                         |
 
 ## Functions
 
-| Name | explain |
-|:---|:---|
-| splitterm#open(['*COMMAND*'])                      | Open split console (run if *COMMAND* is given) |
-| splitterm#close([*terminal_info*])                 | Close latest split terminal window |
+| Name                                               | explain                                                |
+|:---------------------------------------------------|:-------------------------------------------------------|
+| splitterm#open(['*COMMAND*'])                      | Open split console (run if *COMMAND* is given)         |
+| splitterm#close([*terminal_info*])                 | Close latest split terminal window                     |
 | splitterm#exist([*terminal_info*])                 | Check the existence of the last opened terminal window |
-| splitterm#jobsend('*COMMAND*')                     | Send job to the last opened window |
-| splitterm#jobsend_id(*terminal_info*, '*COMMAND*') | Send job to the specified terminal window |
-| splitterm#getinfo()                                | Get *terminal_info* |
+| splitterm#jobsend('*COMMAND*')                     | Send job to the last opened window                     |
+| splitterm#jobsend_id(*terminal_info*, '*COMMAND*') | Send job to the specified terminal window              |
+| splitterm#getinfo()                                | Get *terminal_info*                                    |
 
 #### <u>Sample</u>
 
