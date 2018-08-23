@@ -1,5 +1,8 @@
 # SplitTerm
 
+## TODO:
+- `:10SplitTerm`形式でウィンドウサイズの指定
+
 ## 概要
 
 neovimのターミナルモードのラッパープラグインです  
