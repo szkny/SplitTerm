@@ -12,7 +12,7 @@ if !has('nvim')
 endif
 
 
-command! -complete=shellcmd -nargs=* -count SplitTerm call s:splitterm_command(<count>, <f-args>)
+command! -count -complete=shellcmd -nargs=* SplitTerm call s:splitterm_command(<count>, <f-args>)
 command! -nargs=* SplitTermExec call splitterm#jobsend(<f-args>)
 command! SplitTermClose call splitterm#close()
 
@@ -39,7 +39,7 @@ fun! s:splitterm_command(width, ...)
     silent exe 'lcd ' . l:current_dir
     silent exe 'terminal '.join(a:000)
     " ターミナルのセットアップ
-    call s:termconfig(a:0, a:1)
+    call s:termconfig(a:000)
     return s:term
 endf
 
@@ -66,17 +66,17 @@ fun! splitterm#open(...) abort
     silent exe 'lcd ' . l:current_dir
     silent exe 'terminal '.join(a:000)
     " ターミナルのセットアップ
-    call s:termconfig(a:0, a:1)
+    call s:termconfig(a:000)
     return s:term
 endf
 
 
-fun! s:termconfig(nargs, arg1) abort
+fun! s:termconfig(cmd) abort
     " バッファ名を変更
-    if a:nargs == 0
+    if len(a:cmd) == 0
         silent call s:setnewbufname('bash')
-    elseif a:nargs > 0
-        silent call s:setnewbufname(a:arg1)
+    elseif len(a:cmd) > 0
+        silent call s:setnewbufname(a:cmd)
     endif
     " バッファローカルの設定項目
     setlocal nonumber
