@@ -5,14 +5,13 @@
 "=============================================================================
 scriptencoding utf-8
 
-
 if !has('nvim')
     echomsg 'SplitTerm requires Neovim.'
     finish
 endif
 
-
-command! -count -complete=shellcmd -nargs=* SplitTerm call s:splitterm_command(<count>, <f-args>)
+command! -count -complete=shellcmd -nargs=*
+            \ SplitTerm call s:splitterm_command(<count>, <f-args>)
 command! -nargs=* SplitTermExec call splitterm#jobsend(<f-args>)
 command! SplitTermClose call splitterm#close()
 
