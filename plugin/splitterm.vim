@@ -75,7 +75,7 @@ fun! s:termconfig(cmd) abort
     if len(a:cmd) == 0
         silent call s:setnewbufname('bash')
     elseif len(a:cmd) > 0
-        silent call s:setnewbufname(a:cmd)
+        silent call s:setnewbufname(a:cmd[0])
     endif
     " バッファローカルの設定項目
     setlocal nonumber
