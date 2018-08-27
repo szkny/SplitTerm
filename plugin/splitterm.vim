@@ -12,9 +12,36 @@ if !has('nvim')
 endif
 
 
-command! -complete=shellcmd -nargs=* SplitTerm call splitterm#open(<f-args>)
+command! -complete=shellcmd -nargs=* -count SplitTerm call s:splitterm_command(<count>, <f-args>)
 command! -nargs=* SplitTermExec call splitterm#jobsend(<f-args>)
 command! SplitTermClose call splitterm#close()
+
+
+fun! s:splitterm_command(width, ...)
+    " 分割ウィンドウでターミナルモードを開始する関数
+    " [N]にウィンドウ幅を指定可能
+    "      :[N]SplitTerm[N] [Command] で任意のシェルコマンドを実行
+    let s:term = {}
+    let l:current_dir = expand('%:p:h')
+    " 分割ウィンドウの生成
+    let l:split = ''
+    let l:width = s:vsplitwidth()
+    if l:width
+        let l:split = 'vnew'
+        let l:width = a:width ? a:width : l:width
+        let l:cmd = l:width.l:split
+    else
+        let l:split = 'new'
+        let l:height = a:width ? a:width : s:splitheight()
+        let l:cmd = l:height ? l:height.l:split : l:split
+    endif
+    silent exe l:cmd
+    silent exe 'lcd ' . l:current_dir
+    silent exe 'terminal '.join(a:000)
+    " ターミナルのセットアップ
+    call s:termconfig(a:0, a:1)
+    return s:term
+endf
 
 
 fun! splitterm#open(...) abort
@@ -29,21 +56,27 @@ fun! splitterm#open(...) abort
     let l:width = s:vsplitwidth()
     if l:width
         let l:split = 'vnew'
-        let l:cmd1 = l:width.l:split
+        let l:cmd = l:width.l:split
     else
         let l:split = 'new'
         let l:height = s:splitheight()
-        let l:cmd1 = l:height ? l:height.l:split : l:split
+        let l:cmd = l:height ? l:height.l:split : l:split
     endif
-    silent exe l:cmd1
+    silent exe l:cmd
     silent exe 'lcd ' . l:current_dir
-    " terminalコマンドの実行
     silent exe 'terminal '.join(a:000)
+    " ターミナルのセットアップ
+    call s:termconfig(a:0, a:1)
+    return s:term
+endf
+
+
+fun! s:termconfig(nargs, arg1) abort
     " バッファ名を変更
-    if a:0 == 0
+    if a:nargs == 0
         silent call s:setnewbufname('bash')
-    elseif a:0 > 0
-        silent call s:setnewbufname(a:1)
+    elseif a:nargs > 0
+        silent call s:setnewbufname(a:arg1)
     endif
     " バッファローカルの設定項目
     setlocal nonumber
@@ -61,8 +94,6 @@ fun! splitterm#open(...) abort
     " ターミナル情報の保持
     let s:term.jobid = b:terminal_job_id
     let s:term.console_winid = win_getid()
-    let s:term.split = l:split
-    return s:term
 endf
 
 
