@@ -78,7 +78,7 @@ fun! s:termconfig(cmd) abort
         silent call s:setnewbufname(a:cmd[0])
     endif
     " バッファローカルの設定項目
-    " setlocal nonumber
+    setlocal nonumber
     setlocal buftype=terminal
     setlocal filetype=terminal
     setlocal bufhidden=wipe
