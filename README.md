@@ -1,5 +1,7 @@
 # SplitTerm
 
+[in English](https://github.com/szkny/SplitTerm/blob/master/README_ENGLISH.md)
+
 ## 概要
 
 neovimのターミナルモードのラッパープラグインです  
