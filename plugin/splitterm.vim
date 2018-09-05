@@ -11,12 +11,12 @@ if !has('nvim')
 endif
 
 command! -count -complete=shellcmd -nargs=*
-            \ SplitTerm call s:splitterm_command(<count>, <f-args>)
+            \ SplitTerm call splitterm#open_width(<count>, <f-args>)
 command! -nargs=* SplitTermExec call splitterm#jobsend(<f-args>)
 command! SplitTermClose call splitterm#close()
 
 
-fun! s:splitterm_command(width, ...)
+fun! splitterm#open_width(width, ...)
     " SplitTermコマンド用の関数
     " [N]にウィンドウ幅を指定可能
     "      :[N]SplitTerm[N] [Command] で任意のシェルコマンドを実行
