@@ -17,22 +17,27 @@ command! SplitTermClose call splitterm#close()
 
 
 fun! s:splitterm_command(width, ...)
-    " 分割ウィンドウでターミナルモードを開始する関数
+    " SplitTermコマンド用の関数
     " [N]にウィンドウ幅を指定可能
     "      :[N]SplitTerm[N] [Command] で任意のシェルコマンドを実行
     let s:term = {}
     let l:current_dir = expand('%:p:h')
     " 分割ウィンドウの生成
-    let l:split = ''
-    let l:width = s:vsplitwidth()
-    if l:width
-        let l:split = 'vnew'
+    if a:width
+        " 数値指定があれば水平分割
         let l:width = a:width ? a:width : l:width
-        let l:cmd = l:width.l:split
+        let l:cmd = a:width.'new'
     else
-        let l:split = 'new'
-        let l:height = a:width ? a:width : s:splitheight()
-        let l:cmd = l:height ? l:height.l:split : l:split
+        " または自動判断し水平か垂直に分割
+        let l:width = s:vsplitwidth()
+        if l:width
+            let l:split = 'vnew'
+            let l:cmd = l:width.l:split
+        else
+            let l:split = 'new'
+            let l:height = s:splitheight()
+            let l:cmd = l:height ? l:height.l:split : l:split
+        endif
     endif
     silent exe l:cmd
     silent exe 'lcd ' . l:current_dir
