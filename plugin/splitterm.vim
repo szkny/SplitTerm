@@ -40,6 +40,9 @@ fun! splitterm#open_width(width, ...)
         endif
     endif
     silent exe l:cmd
+    if a:width
+        setlocal noequalalways
+    endif
     silent exe 'lcd ' . l:current_dir
     silent exe 'terminal '.join(a:000)
     " ターミナルのセットアップ
