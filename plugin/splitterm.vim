@@ -228,7 +228,7 @@ fun! splitterm#jobsend(...) abort
     " 一番最近開いたコンソールに引数で与えたコマンドを送る
     if splitterm#exist()
         try
-            call jobsend(s:term.jobid, "\<C-u>".join(a:000)."\<CR>")
+            call jobsend(s:term.jobid, "\<C-e>\<C-u>".join(a:000)."\<CR>")
         catch
         endtry
     endif
@@ -240,7 +240,7 @@ fun! splitterm#jobsend_id(info, ...) abort
     "   引数のinfoにはsplitterm#getinfo()と同じ型の辞書を渡す
     if splitterm#exist(a:info)
         try
-            call jobsend(a:info.jobid, "\<C-u>".join(a:000)."\<CR>")
+            call jobsend(a:info.jobid, "\<C-e>\<C-u>".join(a:000)."\<CR>")
         catch
         endtry
     endif
