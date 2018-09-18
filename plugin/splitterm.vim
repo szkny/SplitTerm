@@ -247,6 +247,29 @@ fun! splitterm#jobsend_id(info, ...) abort
 endf
 
 
+fun! splitterm#jobsend_freestyle(...) abort
+    " 一番最近開いたコンソールに引数で与えたコマンドを送る
+    if splitterm#exist()
+        try
+            call jobsend(s:term.jobid, join(a:000))
+        catch
+        endtry
+    endif
+endf
+
+
+fun! splitterm#jobsend_id_freestyle(info, ...) abort
+    " 指定したコンソールに引数で与えたコマンドを送る
+    "   引数のinfoにはsplitterm#getinfo()と同じ型の辞書を渡す
+    if splitterm#exist(a:info)
+        try
+            call jobsend(a:info.jobid, join(a:000))
+        catch
+        endtry
+    endif
+endf
+
+
 fun! splitterm#getinfo() abort
     if exists('s:term')
         return s:term
