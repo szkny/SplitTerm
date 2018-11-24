@@ -253,7 +253,7 @@ fun! splitterm#exist(...) abort
         " 'jobid'、'console_winid'を持っている必要がある
         if type(a:1) != 4
             " 辞書型以外は受け付けない
-            echoerr 'you must give none or dictionary to the function "splitterm#exist()".'
+            echoerr
         endif
         if has_key(a:1, 'jobid')
           \&& has_key(a:1, 'console_winid')
