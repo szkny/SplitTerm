@@ -20,9 +20,7 @@ fun! splitterm#open_width(width, ...)
     " SplitTermコマンド用の関数
     " [N]にウィンドウ幅を指定可能
     "      :[N]SplitTerm[N] [Command] で任意のシェルコマンドを実行
-    if !exists('s:term')
-        let s:term = {}
-    endif
+    let s:term = {}
     let l:current_dir = expand('%:p:h')
     " 分割ウィンドウの生成
     if a:width
@@ -49,7 +47,7 @@ fun! splitterm#open_width(width, ...)
     silent exe 'terminal '.join(a:000)
     " ターミナルのセットアップ
     call s:termconfig(a:000)
-    return s:term[tabpagenr()][-1]
+    return s:term
 endf
 
 
@@ -58,9 +56,7 @@ fun! splitterm#open(...) abort
     "      縦分割か横分割かは現在のファイル内の文字数と
     "      ウィンドウサイズとの兼ね合いで決まる
     "      :SplitTerm [Command] で任意のシェルコマンドを実行
-    if !exists('s:term')
-        let s:term = {}
-    endif
+    let s:term = {}
     let l:current_dir = expand('%:p:h')
     " 分割ウィンドウの生成
     let l:split = ''
@@ -78,7 +74,7 @@ fun! splitterm#open(...) abort
     silent exe 'terminal '.join(a:000)
     " ターミナルのセットアップ
     call s:termconfig(a:000)
-    return s:term[tabpagenr()][-1]
+    return s:term
 endf
 
 
@@ -103,14 +99,8 @@ fun! s:termconfig(cmd) abort
     setlocal nospell
     setlocal lazyredraw
     " ターミナル情報の保持
-    if !has_key(s:term, tabpagenr())
-        let s:term[tabpagenr()] = []
-    endif
-    let l:term_new = {}
-    let l:term_new.tabnr = tabpagenr()
-    let l:term_new.jobid = b:terminal_job_id
-    let l:term_new.console_winid = win_getid()
-    let s:term[tabpagenr()] += [l:term_new]
+    let s:term.jobid = b:terminal_job_id
+    let s:term.console_winid = win_getid()
 endf
 
 
@@ -182,16 +172,14 @@ fun! splitterm#close(...)
     " SplitTermを終了する関数
     if a:0 == 0
         if splitterm#exist()
-            let l:tnr = tabpagenr()
-            if win_gotoid(s:term[l:tnr][-1].console_winid)
-                call remove(s:term[l:tnr], -1)
+            if win_gotoid(s:term.console_winid)
+                let s:term = {}
                 quit
             endif
         endif
     else
         if splitterm#exist(a:1)
             if win_gotoid(a:1.console_winid)
-                call remove(a:1, -1)
                 quit
             endif
         endif
@@ -203,59 +191,32 @@ fun! splitterm#exist(...) abort
     " 分割ウィンドウの存在チェック
     " or 指定したコンソールの存在チェック
     "   引数にはsplitterm#getinfo()と同じ型の辞書を渡す
-    if !exists('s:term')
-        " s:term(SplitTermの実態)が無ければFalseを返す
-        let s:term = {}
-        return 0
-    endif
-    let l:tnr = tabpagenr()
-    if !has_key(s:term, l:tnr)
-        " 現在のタブページのSplitTermオブジェクトが存在しなければFalseを返す
-        return 0
-    elseif !len(s:term[l:tnr])
-        " 現在のタブページのSplitTermオブジェクトの中身が無ければFalseを返す
-        return 0
-    endif
-    if tabpagenr('$') > 1
-        " タブページを開いている場合
-        "   現在のタブ内のウィンドウIDを取得
-        let l:winid_list =
-                    \ map(range(1, tabpagewinnr(l:tnr, '$')), 'win_getid(v:val, l:tnr)')
-        let l:exist_in_this_tab =
-                    \ match(l:winid_list, s:term[l:tnr][-1].console_winid)==-1? 0:1
-        "   最新のSplitTermオブジェクトと一致するウィンドウIDがあればTrueを保持
-        "   以下の処理で実際に移動できることを確認し、存在確認とする
-    else
-        " タブページが１つ(=タブページを使っていない)場合
-        let l:exist_in_this_tab = 1
-    endif
-    let l:current_winid = win_getid()
     if a:0 == 0
-        " 関数の引数がなかった場合
-        if has_key(s:term[l:tnr][-1], 'jobid')
-          \&& has_key(s:term[l:tnr][-1], 'console_winid')
-            \&& win_gotoid(s:term[l:tnr][-1].console_winid)
+        if !exists('s:term')
+            let s:term = {}
+            return 0
+        endif
+        let l:current_winid = win_getid()
+        if has_key(s:term, 'jobid')
+          \&& has_key(s:term, 'console_winid')
+            \&& win_gotoid(s:term.console_winid)
             call win_gotoid(l:current_winid)
-            " 保持しているウィンドウIDに移動できればTrueを返す
-            return 1 && l:exist_in_this_tab
+            return 1
         else
-            " 移動できなかった場合、オブジェクトを削除しFalseを返す
-            call remove(s:term[l:tnr], -1)
+            let s:term = {}
             return 0
         endif
     else
-        " 引数で指定する場合は、コンソール作成時にsplitterm#open()
-        " またはsplitterm#open_width()が返す辞書オブジェクトを渡す
-        " 'jobid'、'console_winid'を持っている必要がある
         if type(a:1) != 4
             " 辞書型以外は受け付けない
-            echoerr 'you must give none or dictionary to the function "splitterm#exist()".'
+            return
         endif
+        let l:current_winid = win_getid()
         if has_key(a:1, 'jobid')
           \&& has_key(a:1, 'console_winid')
           \&& win_gotoid(a:1.console_winid)
             call win_gotoid(l:current_winid)
-            return 1 && l:exist_in_this_tab
+            return 1
         else
             return 0
         endif
@@ -267,7 +228,7 @@ fun! splitterm#jobsend(...) abort
     " 一番最近開いたコンソールに引数で与えたコマンドを送る
     if splitterm#exist()
         try
-            call jobsend(s:term[tabpagenr()][-1].jobid, "\<C-e>\<C-u>".join(a:000)."\<CR>")
+            call jobsend(s:term.jobid, "\<C-e>\<C-u>".join(a:000)."\<CR>")
         catch
         endtry
     endif
@@ -290,7 +251,7 @@ fun! splitterm#jobsend_freestyle(...) abort
     " 一番最近開いたコンソールに引数で与えたコマンドを送る
     if splitterm#exist()
         try
-            call jobsend(s:term[tabpagenr()][-1].jobid, join(a:000))
+            call jobsend(s:term.jobid, join(a:000))
         catch
         endtry
     endif
