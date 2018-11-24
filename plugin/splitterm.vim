@@ -195,7 +195,6 @@ fun! splitterm#close(...)
     else
         if splitterm#exist(a:1)
             if win_gotoid(a:1.console_winid)
-                call remove(a:1, -1)
                 quit
             endif
         endif
