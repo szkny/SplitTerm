@@ -103,14 +103,18 @@ fun! s:termconfig(cmd) abort
     setlocal nospell
     setlocal lazyredraw
     " ターミナル情報の保持
-    if !has_key(s:term, tabpagenr())
-        let s:term[tabpagenr()] = []
+    let l:tnr = tabpagenr()
+    if !has_key(s:term, l:tnr)
+        " 現在のタブページのSplitTermオブジェクトが存在しなければ新たに作成
+        let s:term[l:tnr] = []
     endif
+    " 追加するオブジェクトの中身
     let l:term_new = {}
-    let l:term_new.tabnr = tabpagenr()
+    let l:term_new.tabnr = l:tnr
     let l:term_new.jobid = b:terminal_job_id
     let l:term_new.console_winid = win_getid()
-    let s:term[tabpagenr()] += [l:term_new]
+    " 現在のタブページのSplitTermオブジェクトの末尾に追加
+    let s:term[l:tnr] += [l:term_new]
 endf
 
 
