@@ -23,7 +23,7 @@ fun! splitterm#open_width(width, ...)
     if !exists('s:term')
         let s:term = {}
     endif
-    let l:current_dir = expand('%:p:h')
+    " let l:current_dir = expand('%:p:h')
     " 分割ウィンドウの生成
     if a:width
         " 数値指定があれば水平分割
@@ -45,7 +45,7 @@ fun! splitterm#open_width(width, ...)
     if a:width
         setlocal noequalalways
     endif
-    silent exe 'lcd ' . l:current_dir
+    " silent exe 'lcd ' . l:current_dir
     silent exe 'terminal '.join(a:000)
     " ターミナルのセットアップ
     call s:termconfig(a:000)
@@ -61,7 +61,7 @@ fun! splitterm#open(...) abort
     if !exists('s:term')
         let s:term = {}
     endif
-    let l:current_dir = expand('%:p:h')
+    " let l:current_dir = expand('%:p:h')
     " 分割ウィンドウの生成
     let l:split = ''
     let l:width = s:vsplitwidth()
@@ -74,7 +74,7 @@ fun! splitterm#open(...) abort
         let l:cmd = l:height ? l:height.l:split : l:split
     endif
     silent exe l:cmd
-    silent exe 'lcd ' . l:current_dir
+    " silent exe 'lcd ' . l:current_dir
     silent exe 'terminal '.join(a:000)
     " ターミナルのセットアップ
     call s:termconfig(a:000)
