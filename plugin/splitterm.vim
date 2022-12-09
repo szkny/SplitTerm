@@ -85,7 +85,7 @@ endf
 fun! s:termconfig(cmd) abort
     " バッファ名を変更
     if len(a:cmd) == 0
-        silent call s:setnewbufname('bash')
+        silent call s:setnewbufname('SplitTerm')
     elseif len(a:cmd) > 0
         silent call s:setnewbufname(a:cmd[0])
     endif
@@ -119,7 +119,7 @@ endf
 
 
 fun! s:setnewbufname(name) abort
-    " 新規バッファのバッファ名(例: '1:bash')を設定する関数
+    " 新規バッファのバッファ名(例: '1:SplitTerm')を設定する関数
     let l:num = 1
     let l:name = split(a:name,' ')[0]
     while bufexists(l:num.':'.l:name)
