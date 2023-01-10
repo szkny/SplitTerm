@@ -101,7 +101,7 @@ fun! s:termconfig(cmd) abort
     setlocal nomodifiable
     setlocal nolist
     setlocal nospell
-    setlocal lazyredraw
+    setlocal nolazyredraw
     " ターミナル情報の保持
     let l:tnr = tabpagenr()
     if !has_key(s:term, l:tnr)
