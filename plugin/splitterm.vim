@@ -15,9 +15,6 @@ command! -count -complete=shellcmd -nargs=*
 command! -nargs=* SplitTermExec call splitterm#jobsend(<f-args>)
 command! SplitTermClose call splitterm#close()
 
-" インサートモードに入るか否か
-let g:splitterm_enable_insert = get(g:, "splitterm_enable_insert", v:true)
-
 
 fun! splitterm#open_width(width, ...)
     " SplitTermコマンド用の関数
@@ -52,9 +49,6 @@ fun! splitterm#open_width(width, ...)
     silent exe 'terminal '.join(a:000)
     " ターミナルのセットアップ
     call s:termconfig(a:000)
-    if g:splitterm_enable_insert
-        insert
-    endif
     return s:term[tabpagenr()][-1]
 endf
 
@@ -84,9 +78,6 @@ fun! splitterm#open(...) abort
     silent exe 'terminal '.join(a:000)
     " ターミナルのセットアップ
     call s:termconfig(a:000)
-    if g:splitterm_enable_insert
-        insert
-    endif
     return s:term[tabpagenr()][-1]
 endf
 
