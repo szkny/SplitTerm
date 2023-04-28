@@ -24,7 +24,13 @@ add to your `init.vim`
 
 ```vimscript
 nnoremap  t  :SplitTerm<CR>i
-```
+
+
+## Options
+
+| Option                         | explain                                                |
+|:-------------------------------|:-------------------------------------------------------|
+| g:splitterm_auto_close_window  | Close SplitTerm window when process ended (default=1)  |
 
 ## Commands
 
