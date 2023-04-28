@@ -15,6 +15,15 @@ command! -count -complete=shellcmd -nargs=*
 command! -nargs=* SplitTermExec call splitterm#jobsend(<f-args>)
 command! SplitTermClose call splitterm#close()
 
+let g:splitterm_auto_close_window = get(g:, "splitterm_auto_close_window", 1)
+
+if g:splitterm_auto_close_window
+    aug SplitTermTabClose
+        au!
+        au TermClose * exe 'bdelete! '.expand('<abuf>') | redraw!
+    aug END
+endif
+
 
 fun! splitterm#open_width(width, ...)
     " SplitTermコマンド用の関数
