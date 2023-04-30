@@ -20,7 +20,7 @@ let g:splitterm_auto_close_window = get(g:, "splitterm_auto_close_window", 1)
 if g:splitterm_auto_close_window
     aug SplitTermTabClose
         au!
-        au TermClose * exe 'bdelete! '.expand('<abuf>') | redraw!
+        au TermClose * silent! exe 'bdelete! '.expand('<abuf>') | redraw!
     aug END
 endif
 
