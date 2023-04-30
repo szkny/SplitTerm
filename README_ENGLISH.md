@@ -24,7 +24,7 @@ add to your `init.vim`
 
 ```vimscript
 nnoremap  t  :SplitTerm<CR>i
-
+```
 
 ## Options
 
