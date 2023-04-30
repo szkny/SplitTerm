@@ -1,67 +1,62 @@
 # SplitTerm
 
-[in English](https://github.com/szkny/SplitTerm/blob/master/README_ENGLISH.md)
+## About
 
-## 概要
+SplitTerm is a plugin to easily use for neovim terminal mode.  
 
-neovimのターミナルモードのラッパープラグインです  
+## Install
 
-## インストール
-
-[vim-plug](https://github.com/junegunn/vim-plug)の場合、`init.vim`に以下を追記  
+if you use [vim-plug](https://github.com/junegunn/vim-plug), add the following to your `init.vim`  
 
 ```vim
 Plug 'szkny/SplitTerm'
 ```
 
-neovimを開いて下記コマンドを実行  
+then, open nvim and execute the following command  
+
 ```vim
 :PlugInstall
 ```
 
-## キーマッピング (おすすめ)
+## Mapping (recommended)
 
-`t`で分割コンソールを起動するようにマッピング  
+add to your `init.vim`  
 
 ```vimscript
 nnoremap  t  :SplitTerm<CR>i
 ```
 
-## オプション
+## Options
 
-| オプション                     | 説明                                                   |
+| Option                         | explain                                                |
 |:-------------------------------|:-------------------------------------------------------|
-| g:splitterm_auto_close_window  | 処理が完了した際に自動でウィンドウを閉じる (default=1) |
+| g:splitterm_auto_close_window  | Close SplitTerm window when process ended (default=1)  |
 
-## コマンド
+## Commands
 
-| 使い方                      | 説明                                                  |
-|:----------------------------|:------------------------------------------------------|
-| :SplitTerm *COMMAND*        | 分割コンソールを開き、*COMMAND*を実行 (default: bash) |
-| :SplitTermJobSend *COMMAND* | 最後に開いたコンソールで*COMMAND*を実行               |
-| :SplitTermClose             | 最後に開いたコンソールを閉じる                        |
+| Usage                        | explain                                                                    |
+|:-----------------------------|:---------------------------------------------------------------------------|
+| :SplitTerm *COMMANDS*        | Start terminal & execute following commands (ex. **python**, default=bash) |
+| :SplitTermJobSend *COMMANDS* | Send job to Terminal                                                       |
+| :SplitTermClose              | Close latest split terminal window                                         |
 
-## 関数
+## Functions
 
-`[]`の引数はオプショナル
+| Name                                               | explain                                                |
+|:---------------------------------------------------|:-------------------------------------------------------|
+| splitterm#open(['*COMMAND*'])                      | Open split console (run if *COMMAND* is given)         |
+| splitterm#close([*terminal_info*])                 | Close latest split terminal window                     |
+| splitterm#exist([*terminal_info*])                 | Check the existence of the last opened terminal window |
+| splitterm#jobsend('*COMMAND*')                     | Send job to the last opened window                     |
+| splitterm#jobsend_id(*terminal_info*, '*COMMAND*') | Send job to the specified terminal window              |
+| splitterm#getinfo()                                | Get *terminal_info*                                    |
 
-| 名前                                           | 説明                                                                     |
-|:-----------------------------------------------|:-------------------------------------------------------------------------|
-| splitterm#open(['*COMMAND*'])                  | 分割コンソールを開く (*COMMAND*が与えられれば実行)                       |
-| splitterm#close([*term_info*])                 | 最後に開いたコンソールを閉じる (*term_info*で指定したコンソールを閉じる) |
-| splitterm#exist([*term_info*])                 | 最後に開いたコンソールの存在確認 (*term_info*で指定したコンソールを確認) |
-| splitterm#jobsend('*COMMAND*')                 | 最後に開いたコンソールで*COMMAND*を実行                                  |
-| splitterm#jobsend_id(*term_info*, '*COMMAND*') | *term_info*で指定したコンソールで*COMMAND*を実行                         |
-| splitterm#getinfo()                            | 最後に開いたコンソールの*terminal_info*を取得                            |
+#### <u>Sample</u>
 
-#### <u>応用例</u>
-
-```vim
+```vimscript
 fun! s:python_run() abort
-    " ABOUT: Pythonコンソールウィンドウを作り、編集中のPythonスクリプトを実行する関数
     if &filetype ==# 'python'
         if s:python_exist()
-            "" コンソールウィンドウが有ればスクリプトを実行
             let l:script_name = expand('%:p')
             let l:script_dir = expand('%:p:h')
             if has_key(s:ipython, 'script_name')
@@ -77,7 +72,6 @@ fun! s:python_run() abort
             let s:ipython.script_dir = l:script_dir
             call splitterm#jobsend_id(s:ipython.info, '%run '.s:ipython.script_name)
         else
-            "" コンソールウィンドウが無ければコンソール用のウィンドウを作る
             let l:command = 'ipython'
             let l:filename = ' ' . expand('%')
             if findfile('Pipfile', expand('%:p')) !=# ''
@@ -111,9 +105,7 @@ fun! s:python_exist() abort
 endf
 ```
 
-## デモ
+## Demo
 
-![](https://github.com/szkny/SplitTerm/wiki/images/demo1.gif)  
-
-上記の応用例(Pythonコマンド)  
-![](https://github.com/szkny/SplitTerm/wiki/images/demo2.gif)  
+![](https://github.com/szkny/SplitTerm/wiki/images/demo1.gif)
+![](https://github.com/szkny/SplitTerm/wiki/images/demo2.gif)
