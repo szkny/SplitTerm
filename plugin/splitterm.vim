@@ -73,7 +73,7 @@ fun! splitterm#vopen_width(width, ...) abort
         let s:term = {}
     endif
     " 分割ウィンドウの生成
-    let l:width = a:width ? a:width : l:width
+    let l:width = a:width ? a:width : ''
     let l:split = 'vnew'
     let l:cmd = l:width.l:split
     silent exe l:cmd
