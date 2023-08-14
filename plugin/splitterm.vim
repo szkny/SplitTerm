@@ -12,6 +12,8 @@ endif
 
 command! -count -complete=shellcmd -nargs=*
             \ SplitTerm call splitterm#open_width(<count>, <f-args>)
+command! -complete=shellcmd -nargs=*
+            \ VSplitTerm call splitterm#vopen(<f-args>)
 command! -nargs=* SplitTermExec call splitterm#jobsend(<f-args>)
 command! SplitTermClose call splitterm#close()
 
@@ -84,6 +86,25 @@ fun! splitterm#open(...) abort
     endif
     silent exe l:cmd
     " silent exe 'lcd ' . l:current_dir
+    silent exe 'terminal '.join(a:000)
+    " ターミナルのセットアップ
+    call s:termconfig(a:000)
+    return s:term[tabpagenr()][-1]
+endf
+
+
+fun! splitterm#vopen(...) abort
+    " 水平分割ウィンドウでターミナルモードを開始する関数
+    "      :VSplitTerm [Command] で任意のシェルコマンドを実行
+    if !exists('s:term')
+        let s:term = {}
+    endif
+    " 分割ウィンドウの生成
+    let l:split = ''
+    let l:width = s:vsplitwidth()
+    let l:split = 'vnew'
+    let l:cmd = l:width.l:split
+    silent exe l:cmd
     silent exe 'terminal '.join(a:000)
     " ターミナルのセットアップ
     call s:termconfig(a:000)
