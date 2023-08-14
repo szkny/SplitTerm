@@ -12,8 +12,8 @@ endif
 
 command! -count -complete=shellcmd -nargs=*
             \ SplitTerm call splitterm#open_width(<count>, <f-args>)
-command! -complete=shellcmd -nargs=*
-            \ VSplitTerm call splitterm#vopen(<f-args>)
+command! -count -complete=shellcmd -nargs=*
+            \ VSplitTerm call splitterm#vopen_width(<count>, <f-args>)
 command! -nargs=* SplitTermExec call splitterm#jobsend(<f-args>)
 command! SplitTermClose call splitterm#close()
 
@@ -64,6 +64,24 @@ fun! splitterm#open_width(width, ...)
 endf
 
 
+fun! splitterm#vopen_width(width, ...) abort
+    " 垂直分割ウィンドウでターミナルモードを開始する関数
+    "      :VSplitTerm [Command] で任意のシェルコマンドを実行
+    if !exists('s:term')
+        let s:term = {}
+    endif
+    " 分割ウィンドウの生成
+    let l:width = a:width ? a:width : l:width
+    let l:split = 'vnew'
+    let l:cmd = l:width.l:split
+    silent exe l:cmd
+    silent exe 'terminal '.join(a:000)
+    " ターミナルのセットアップ
+    call s:termconfig(a:000)
+    return s:term[tabpagenr()][-1]
+endf
+
+
 fun! splitterm#open(...) abort
     " 分割ウィンドウでターミナルモードを開始する関数
     "      縦分割か横分割かは現在のファイル内の文字数と
@@ -93,17 +111,15 @@ fun! splitterm#open(...) abort
 endf
 
 
-fun! splitterm#vopen(...) abort
+fun! splitterm#hopen(...) abort
     " 水平分割ウィンドウでターミナルモードを開始する関数
-    "      :VSplitTerm [Command] で任意のシェルコマンドを実行
+    "      :HSplitTerm [Command] で任意のシェルコマンドを実行
     if !exists('s:term')
         let s:term = {}
     endif
     " 分割ウィンドウの生成
-    let l:split = ''
-    let l:width = s:vsplitwidth()
-    let l:split = 'vnew'
-    let l:cmd = l:width.l:split
+    let l:split = 'new'
+    let l:cmd = l:split
     silent exe l:cmd
     silent exe 'terminal '.join(a:000)
     " ターミナルのセットアップ
