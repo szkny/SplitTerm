@@ -14,6 +14,8 @@ command! -count -complete=shellcmd -nargs=*
             \ SplitTerm call splitterm#open_width(<count>, <f-args>)
 command! -count -complete=shellcmd -nargs=*
             \ VSplitTerm call splitterm#vopen_width(<count>, <f-args>)
+command!        -complete=shellcmd -nargs=*
+            \ HSplitTerm call splitterm#hopen(<f-args>)
 command! -nargs=* SplitTermExec call splitterm#jobsend(<f-args>)
 command! SplitTermClose call splitterm#close()
 
